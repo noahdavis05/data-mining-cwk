@@ -52,8 +52,5 @@ class WikiScraper:
 
         
         
-
-
-
 scraper = WikiScraper()
 scraper.scrapePages()
