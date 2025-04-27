@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 
 
 class WikiScraper:
-    def __init__(self):
-        self.file = "data_sources/data_urls.txt"
-        self.output_file = "processed_data/star_wars_data.jsonl"
+    def __init__(self, file="data_sources/data_urls.txt", output_file="processed_data/star_wars_data.jsonl"):
+        self.file = file
+        self.output_file = output_file
 
     def scrapePages(self):
         # read the list of urls to scrape and split by "\n" to remove the \n char
@@ -22,7 +22,9 @@ class WikiScraper:
             file.write(json.dumps(temp_dict) + '\n')
         file.close()
 
-    
+    """
+    This function is for scraping the character pages
+    """
     def getPageContent(self, url):
         try:
             response = requests.get(url)
@@ -42,12 +44,47 @@ class WikiScraper:
                 if text:
                     full_content += text 
 
-            final_string = "Instruction: Tell me about " + title + "\n\nResponse: " + full_content
-
+            #final_string = "Instruction: Tell me about " + title + "\n\nResponse: " + full_content
+            final_string = full_content
             return final_string
 
         except Exception as e:
             print("Error: ", e)
+
+
+    """
+    This function is for scraping the content of plots
+    """
+    def getPlotsContent(self,url):
+        try:
+            response = requests.get(url)
+            if response.status_code != 200:
+                return None
+            
+            # get the content
+            soup = BeautifulSoup(response.text, "html.parser")
+            # get the page title
+            title_div = soup.find(id="firstHeading")
+            plot_title = soup.find(id="Plot")
+            parent_div = plot_title.find_parent("div")
+            print(parent_div.next_sibling)
+            full_content = ""
+            for sibling in parent_div.next_siblings:
+                print(sibling)
+                if not hasattr(sibling, 'name'):
+                    continue
+                if sibling.name == "p":
+                    full_content += sibling.text + "\n"
+
+                else:
+                    break
+
+
+
+            print(full_content)
+
+        except Exception as e:
+            print("Error: ",e)
 
 
         
