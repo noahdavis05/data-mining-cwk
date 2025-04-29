@@ -17,8 +17,8 @@ class WikiScraper:
         # scrape each page and write to the output file
         file = open(self.output_file, "a")
         for url in urls:
-            content = page_text = self.getPageContent(url)
-            temp_dict = {"text":content}
+            content, name = self.getPageContent(url)
+            temp_dict = {"text":content, "name":name}
             file.write(json.dumps(temp_dict) + '\n')
         file.close()
 
@@ -46,7 +46,7 @@ class WikiScraper:
 
             #final_string = "Instruction: Tell me about " + title + "\n\nResponse: " + full_content
             final_string = full_content
-            return final_string
+            return final_string, title
 
         except Exception as e:
             print("Error: ", e)
