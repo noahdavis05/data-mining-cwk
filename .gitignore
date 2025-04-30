@@ -2,3 +2,6 @@ test.py
 venv/
 count_tokens.py
 .env
+results_lora/
+star_wars_3/
+star_wars_lora/
